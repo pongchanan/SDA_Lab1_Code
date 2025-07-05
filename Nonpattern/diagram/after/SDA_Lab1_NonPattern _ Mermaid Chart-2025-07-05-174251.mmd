@@ -1,0 +1,40 @@
+classDiagram
+    class CourseRecord {
+        name: string
+        numOfStudents: int
+        CourseRecord(String courseName, int numOfStudents)
+        getNumOfStudents() int
+        getName() string
+        setNumOfStudents(int numOfStudents) void
+        toString() string
+    }
+
+    class CourseViewer {
+        sliderPanel: JPanel
+        coursePanel: JPanel
+        sliders: ArrayList
+        scrollPane: JScrollPane
+        button: JButton
+        CourseViewer()
+        addCourse(CourseRecord courseRecord) void
+        paint(Graphics g) void
+        drawPieChart(Graphics g) void
+        actionPerformed(ActionEvent arg0) void
+        stateChanged(ChangeEvent arg0) void
+        main(String[] args) void
+    }
+
+    class LayoutConstants {
+        xOffset: int
+        yOffset: int
+        graphHeight: int
+        maxValue: int
+        barHeight: int
+        barWidth: int
+        barSpacing: int
+        courseColours: Color[]
+        paintBarChartOutline(Graphics g, int noOfBars) void
+    }
+
+    CourseViewer --> CourseRecord : manages
+    CourseViewer --> LayoutConstants : uses layout

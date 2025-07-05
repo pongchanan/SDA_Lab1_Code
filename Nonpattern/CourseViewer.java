@@ -118,7 +118,7 @@ public class CourseViewer extends JFrame implements ActionListener,
 			sliders.add(slider);
 			this.setSize(LayoutConstants.xOffset + 50 + this.sliders.size()
 					* (LayoutConstants.barWidth + LayoutConstants.barSpacing),
-					(sliders.size() + 1) * 100 + this.button.getHeight());
+					Math.max((sliders.size() + 1) * 100 + this.button.getHeight(), 400));
 			this.sliderPanel.revalidate();
 			this.coursePanel.revalidate();
 			this.repaint();
@@ -129,6 +129,8 @@ public class CourseViewer extends JFrame implements ActionListener,
 	public void paint(Graphics g) {
 		super.paint(g);
 		LayoutConstants.paintBarChartOutline(g, sliders.size());
+		
+		// Draw bar chart
 		for (int i = 0; i < sliders.size(); i++) {
 			JSlider record = sliders.get(i);
 			g.setColor(LayoutConstants.courseColours[i]);
@@ -147,6 +149,71 @@ public class CourseViewer extends JFrame implements ActionListener,
 							* LayoutConstants.barWidth, LayoutConstants.yOffset
 							+ LayoutConstants.graphHeight + 20);
 		}
+		
+		// Draw pie chart
+		if (sliders.size() > 0) {
+			drawPieChart(g);
+		}
+	}
+
+	/**
+	 * Draws a pie chart representation of the course data
+	 * 
+	 * @param g Graphics object for drawing
+	 */
+	private void drawPieChart(Graphics g) {
+		// Calculate total of all values
+		int total = 0;
+		for (int i = 0; i < sliders.size(); i++) {
+			total += sliders.get(i).getValue();
+		}
+		
+		// Pie chart parameters
+		int pieX = 375;  // X position of pie chart
+		int pieY = 300;  // Y position of pie chart
+		int pieWidth = 100;  // Width of pie chart
+		int pieHeight = 100; // Height of pie chart
+		
+		// Draw pie chart title
+		g.setColor(Color.BLACK);
+		g.drawString("Course Enrollment Pie Chart", pieX, pieY - 10);
+		
+		// Draw pie chart slices
+		int currentAngle = 0;
+		for (int i = 0; i < sliders.size(); i++) {
+			JSlider record = sliders.get(i);
+			int value = record.getValue();
+			
+			// Calculate angle for this slice (360 degrees total)
+			int sliceAngle = (int) Math.round((360.0 * value) / total);
+			
+			// Set color for this slice
+			g.setColor(LayoutConstants.courseColours[i]);
+			
+			// Draw filled arc (pie slice)
+			g.fillArc(pieX, pieY, pieWidth, pieHeight, currentAngle, sliceAngle);
+			
+			// Draw outline of slice
+			g.setColor(Color.BLACK);
+			g.drawArc(pieX, pieY, pieWidth, pieHeight, currentAngle, sliceAngle);
+			
+			// Draw course name and percentage
+			double percentage = (100.0 * value) / total;
+			String label = record.getName() + " (" + String.format("%.1f", percentage) + "%)";
+			g.drawString(label, pieX + pieWidth + 10, pieY + 20 + (i * 20));
+			
+			// Draw color legend
+			g.setColor(LayoutConstants.courseColours[i]);
+			g.fillRect(pieX + pieWidth + 10 - 15, pieY + 20 + (i * 20) - 12, 10, 10);
+			g.setColor(Color.BLACK);
+			g.drawRect(pieX + pieWidth + 10 - 15, pieY + 20 + (i * 20) - 12, 10, 10);
+			
+			currentAngle += sliceAngle;
+		}
+		
+		// Draw pie chart outline
+		g.setColor(Color.BLACK);
+		g.drawOval(pieX, pieY, pieWidth, pieHeight);
 	}
 
 	/**

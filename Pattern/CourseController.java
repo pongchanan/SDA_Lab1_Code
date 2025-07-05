@@ -144,6 +144,7 @@ public class CourseController extends JPanel implements Observer, ChangeListener
 
 		CourseController controller = new CourseController(data);
 		BarChartObserver bar = new BarChartObserver(data);
+		PieChartObserver pie = new PieChartObserver(data);
 
 		JScrollPane scrollPane = new JScrollPane(bar,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -166,6 +167,11 @@ public class CourseController extends JPanel implements Observer, ChangeListener
 		constraints.gridx = 1;
 		constraints.gridy = 0;
 		frame.getContentPane().add(scrollPane, constraints);
+		constraints.weightx = 0.25;
+		constraints.weighty = 1.0;
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		frame.getContentPane().add(pie, constraints);
 		frame.pack();
 		frame.setVisible(true);
 	}

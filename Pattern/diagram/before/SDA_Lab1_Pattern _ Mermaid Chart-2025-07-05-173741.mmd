@@ -1,0 +1,69 @@
+classDiagram
+  class BarChartObserver {
+    courseData
+    BarChartObserver(data)
+    paint(g) void 
+    update(o) void
+  }
+
+  class CourseController {
+    courseData
+    sliders
+    coursePanel
+    CourseController(courses)
+    addCourse(record) void
+    update(o) void
+    actionPerformed(arg0) void
+    main(args) void
+  }
+
+  class CourseData {
+    courseData
+    CourseData()
+    addCourseRecord(courseRecord) void
+    changeCourseRecord(subjectName, numOfStudents) void
+    getUpdate() 
+  }
+
+  class CourseRecord {
+    name
+    numOfStudents
+    CourseRecord(courseName, numOfStudents)
+    getNumOfStudents() 
+    getName() 
+    setNumOfStudents(numOfStudents) void
+    toString() 
+  }
+
+  class LayoutConstants {
+    xOffset 
+    yOffset 
+    graphHeight 
+    maxValue 
+    barHeight 
+    barWidth 
+    barSpacing 
+    courseColours 
+    paintBarChartOutline(g, noOfBars) void
+  }
+
+  class Observable {
+    observers
+    Observable()
+    attach(o) void
+    detach(o) void
+    notifyObservers() void
+    getUpdate() 
+  }
+
+  class Observer {
+    update(o) void
+  }
+
+  %% Relationships
+  BarChartObserver ..|> Observer : implements
+  CourseData --|> Observable : extends
+  CourseData "1" o-- "*" CourseRecord : contains
+  CourseController --> CourseData : controls
+  CourseController --> BarChartObserver : updates
+  BarChartObserver --> CourseData : observes

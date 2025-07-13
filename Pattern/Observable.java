@@ -40,10 +40,12 @@ public abstract class Observable {
 	/**
 	 * Notify all Observers that Subject has changed
 	 */
+	@SuppressWarnings("unchecked")
 	public void notifyObservers() {
+		ArrayList<CourseRecord> data = (ArrayList<CourseRecord>) this.getUpdate(); // Get the data to push
 		for (int i = 0; i < observers.size(); i++) {
 			Observer observer = observers.get(i);
-			observer.update(this);
+			observer.update(this, data); // Push the data to observers
 		}
 	}
 

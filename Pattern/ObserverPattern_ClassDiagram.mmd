@@ -1,0 +1,116 @@
+classDiagram
+    %% Observer Pattern - Push Model Implementation
+    
+    class Observer {
+        <<interface>>
+        +update(Observable o, ArrayList~CourseRecord~ data)
+    }
+    
+    class Observable {
+        <<abstract>>
+        #observers: ArrayList~Observer~
+        +Observable()
+        +attach(Observer o)
+        +detach(Observer o)
+        +notifyObservers()
+        +getUpdate()* Object
+    }
+    
+    class CourseData {
+        -courseData: ArrayList~CourseRecord~
+        +CourseData()
+        +addCourseRecord(CourseRecord courseRecord)
+        +changeCourseRecord(String subjectName, int numOfStudents)
+        +getUpdate(): ArrayList~CourseRecord~
+        +main(String[] args)
+    }
+    
+    class CourseRecord {
+        -name: String
+        -numOfStudents: int
+        +CourseRecord(String courseName, int numOfStudents)
+        +getNumOfStudents(): int
+        +getName(): String
+        +setNumOfStudents(int numOfStudents)
+        +toString(): String
+    }
+    
+    class BarChartObserver {
+        -courseData: ArrayList~CourseRecord~
+        +BarChartObserver(CourseData data)
+        +paint(Graphics g)
+        +update(Observable o, ArrayList~CourseRecord~ data)
+    }
+    
+    class PieChartObserver {
+        -courseData: ArrayList~CourseRecord~
+        +PieChartObserver(CourseData data)
+        +paint(Graphics g)
+        +update(Observable o, ArrayList~CourseRecord~ data)
+    }
+    
+    class CourseController {
+        -courseData: CourseData
+        -sliders: ArrayList~JSlider~
+        -coursePanel: JPanel
+        +CourseController(CourseData courses)
+        +addCourse(CourseRecord record)
+        +update(Observable o, ArrayList~CourseRecord~ data)
+        +actionPerformed(ActionEvent arg0)
+        +stateChanged(ChangeEvent arg0)
+        +main(String[] args)
+    }
+    
+    class LayoutConstants {
+        <<utility>>
+        +xOffset: int
+        +yOffset: int
+        +barWidth: int
+        +barHeight: int
+        +barSpacing: int
+        +graphHeight: int
+        +maxValue: int
+        +paintBarChartOutline(Graphics g, int numOfBars)$
+    }
+    
+    class JPanel {
+        <<Swing>>
+    }
+    
+    class ChangeListener {
+        <<interface>>
+    }
+    
+    class ActionListener {
+        <<interface>>
+    }
+    
+    %% Inheritance relationships
+    Observable <|-- CourseData
+    Observer <|.. BarChartObserver
+    Observer <|.. PieChartObserver
+    Observer <|.. CourseController
+    JPanel <|-- BarChartObserver
+    JPanel <|-- PieChartObserver
+    JPanel <|-- CourseController
+    ChangeListener <|.. CourseController
+    ActionListener <|.. CourseController
+    
+    %% Composition/Aggregation relationships
+    Observable *-- Observer : observers
+    CourseData *-- CourseRecord : courseData
+    BarChartObserver *-- CourseRecord : courseData
+    PieChartObserver *-- CourseRecord : courseData
+    CourseController *-- CourseData : courseData
+    
+    %% Dependencies
+    BarChartObserver ..> LayoutConstants : uses
+    PieChartObserver ..> LayoutConstants : uses
+    CourseController ..> CourseRecord : creates
+    
+    %% Notes about the pattern
+    note for Observer "Push Model:\nReceives data directly\nin update() method"
+    
+    note for Observable "Pushes data to all\nobservers when\nnotifyObservers() is called"
+    
+    note for CourseData "Concrete Subject:\nMaintains state and\nnotifies observers\nwhen state changes"
